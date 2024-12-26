@@ -1,7 +1,7 @@
 # WIP
  - [x] Parking
- - [x] Retreive
- - [ ] Anything else
+ - [x] Managment
+ - [ ] Wardrobe
 
 # ox_property
 
