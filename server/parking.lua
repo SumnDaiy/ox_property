@@ -123,7 +123,7 @@ exports('storeVehicle', storeVehicle)
 ---@return boolean response, string msg
 local function retrieveVehicle(player, component, id)
     player = type(player) == 'number' and Ox.GetPlayer(player) or player --[[@as OxPlayer]]
-    local vehicle = MySQL.single.await('SELECT `model`, `stored` FROM `vehicles` WHERE `id` = ? AND (`owner` = ? OR `group` IN (?))', {id, player.charId, getPlayerGroupsArray(player)})
+    local vehicle = MySQL.single.await('SELECT `model`, `stored`, `id` FROM `vehicles` WHERE `id` = ? AND (`owner` = ? OR `group` IN (?))', {id, player.charId, getPlayerGroupsArray(player)})
 
     if not vehicle then
         return false, 'vehicle_not_found'
@@ -139,7 +139,7 @@ local function retrieveVehicle(player, component, id)
         return false, 'vehicle_requirements_not_met'
     end
 
-    Ox.CreateVehicle(id, spawn.coords, spawn.heading)
+    Ox.SpawnVehicle(vehicle.id, spawn.coords, spawn.heading)
 
     return true, 'vehicle_retrieved'
 end
@@ -151,7 +151,7 @@ exports('retrieveVehicle', retrieveVehicle)
 ---@param id integer
 ---@return boolean response, string? msg
 local function moveVehicle(player, property, component, id)
-    local vehicles = Ox.GetVehicles()
+    local vehicles = MySQL.single.await('SELECT `model`, `stored` FROM `vehicles` WHERE `id` = ? AND (`owner` = ? OR `group` IN (?))', {id, player.charId, getPlayerGroupsArray(player)})
     local vehicle, recover, db
 
     for i = 1, #vehicles do

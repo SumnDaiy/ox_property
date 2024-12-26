@@ -1,3 +1,5 @@
+local player = Ox.GetPlayer()
+
 local vehicleNames = setmetatable({}, {
 	__index = function(self, index)
 		local data = Ox.GetVehicleData(index)
@@ -24,7 +26,7 @@ local function manageVehicle(data)
             title = 'Update Values',
             disabled = data.vehicle.owner ~= player.charId,
             onSelect = function(args)
-                local groupTable = player.groups
+                local groupTable = player.getGroups()
                 local groups = {{value = 'none', label = 'None'}}
 
                 for group in pairs(groupTable) do
