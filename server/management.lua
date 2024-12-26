@@ -3,7 +3,7 @@
 ---@return OxPropertyManagementData data
 local function getManagementData(property, player)
     local data = {
-        groups = MySQL.query.await('SELECT name, label, grades FROM ox_groups'),
+        groups = MySQL.query.await('SELECT name, ox_groups.label, GROUP_CONCAT(grade) AS grades FROM ox_groups LEFT JOIN ox_group_grades ON name = ox_group_grades.group GROUP BY ox_groups.name;'),
         doors = MySQL.query.await('SELECT id, name, data FROM ox_doorlock WHERE name LIKE ?', {('%s%%'):format(property)}),
         nearbyPlayers = {
             {
@@ -15,7 +15,14 @@ local function getManagementData(property, player)
 
     for i = 1, #data.groups do
         local group = data.groups[i]
-        group.grades = json.decode(group.grades)
+        local gradesString = group.grades
+        group.grades = {}
+
+        for grade in gradesString:gmatch("([^,]+)") do
+            table.insert(group.grades, grade)
+        end
+
+        print(table.unpack(group.grades))
     end
 
     for i = 1, #data.doors do

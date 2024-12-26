@@ -191,9 +191,13 @@ RegisterComponentAction('management', function(component)
 
                 lib.showMenu('edit_level')
             elseif selected == 1 or selected == 2 then
+                local player = Ox.GetPlayer()
                 local value
                 local options = {
-                    {label = 'None'}
+                    {
+                        label = 'None',
+                        args = {}
+                    }
                 }
 
                 if selected == 1 then
@@ -201,7 +205,7 @@ RegisterComponentAction('management', function(component)
 
                     for i = 1, #displayData.nearbyPlayers do
                         local player = displayData.nearbyPlayers[i]
-
+                        
                         options[#options + 1] = {
                             label = player.name,
                             args = {

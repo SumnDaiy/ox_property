@@ -53,7 +53,7 @@ local function setBlipVariables(blip, property)
     SetBlipColour(blip, variables.colour)
     SetBlipShrink(blip, true)
 
-    if variables.owner ~= player.charId and not (variables.group and player.groups[variables.group]) then
+    if variables.owner ~= player.charId and not (variables.group and player.getGroups(variables.group)) then
         SetBlipAsShortRange(blip, true)
     end
 end
@@ -295,7 +295,7 @@ local function isPermitted(property, componentId)
     end
 
     local group = variables.group
-    if group and player.groups[group] == #GlobalState[('group.%s'):format(group)].grades then
+    if group and player.getGroup(group) == #GlobalState[('group.%s'):format(group)].grades then
         return 1
     end
 
