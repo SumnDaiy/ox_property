@@ -47,7 +47,7 @@ local function setVehicleValues(player, data)
             if key == 'label' then
                 MySQL.update('UPDATE `vehicles` SET `data` = JSON_SET(`data`, "$.label", ?) WHERE `id` = ? AND `owner` = ?', {value ~= "" and value or nil, data.id, player.charId})
             elseif key == 'group' then
-                MySQL.update('UPDATE `vehicles` SET `group` = ? WHERE `id` = ? AND `owner` = ?', {value, data.id, player.charId})
+                MySQL.update('UPDATE `vehicles` SET `group` = ? WHERE `id` = ? AND `owner` = ?', {value ~= "none" and value or nil, data.id, player.charId})
             end
         end
     end
