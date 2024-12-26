@@ -191,7 +191,6 @@ RegisterComponentAction('management', function(component)
 
                 lib.showMenu('edit_level')
             elseif selected == 1 or selected == 2 then
-                local player = Ox.GetPlayer()
                 local value
                 local options = {
                     {

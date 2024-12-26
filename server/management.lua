@@ -17,12 +17,9 @@ local function getManagementData(property, player)
         local group = data.groups[i]
         local gradesString = group.grades
         group.grades = {}
-
         for grade in gradesString:gmatch("([^,]+)") do
             table.insert(group.grades, grade)
         end
-
-        print(table.unpack(group.grades))
     end
 
     for i = 1, #data.doors do
