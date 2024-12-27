@@ -10,7 +10,9 @@ RegisterComponentAction('wardrobe', function(component)
     end
     if not data then return end
 
-    local personalOutfits, componentOutfits in data
+    --local personalOutfits, componentOutfits in data
+
+    local personalOutfits = lib.callback.await("illenium-appearance:server:getOutfits")
 
     if component.outfits then
         options[#options + 1] = {
@@ -39,20 +41,12 @@ RegisterComponentAction('wardrobe', function(component)
     end
 
     options[#options + 1] = {
-        title = 'Personal wardrobe',
-        event = 'ox_property:outfits',
+        title = 'Outfits',
+        event = 'illenium-appearance:client:openSpecificClothingShopMenu',
         args = {
-            property = component.property,
-            componentId = component.componentId,
-            outfitNames = personalOutfits or {}
+            isPedMenu = false,
+            menuType = "outfit"
         }
-    }
-
-    options[#options + 1] = {
-        title = 'Save new personal outfit',
-        arrow = true,
-        event = 'ox_appearance:saveOutfit',
-        args = {slot = 'new', name = ''}
     }
 
     return {options = options}, 'contextMenu'
@@ -72,15 +66,15 @@ RegisterNetEvent('ox_property:outfits', function(data)
     local options = {}
 
     for k, v in pairs(data.outfitNames) do
-        options[v] = {
-            event = data.zoneOutfits and 'ox_property:setOutfit' or 'ox_appearance:setOutfit',
-            args = data.zoneOutfits and {
-                property = CurrentZone.property,
-                componentId = CurrentZone.componentId,
-                slot = k,
-                name = v,
-                outfitNames = data.outfitNames
-            } or {slot = k, name = v}
+        options[k] = {
+            title = v.name,
+            event = 'illenium-appearance:client:changeOutfit',
+            args = {
+                name = v.name,
+                model = v.model,
+                components = v.components,
+                props = v.props
+            }
         }
     end
 
@@ -174,7 +168,8 @@ AddEventHandler('ox_property:saveOutfit', function(data)
 end)
 
 RegisterNetEvent('ox_property:applyOutfit', function(appearance)
-    if not appearance.model then appearance.model = 'mp_m_freemode_01' end
+    --print(json.encode(appearance, {indent=true}))
+--[[     if not appearance.model then appearance.model = 'mp_m_freemode_01' end
 
     if lib.progressCircle({
         duration = 3000,
@@ -192,5 +187,5 @@ RegisterNetEvent('ox_property:applyOutfit', function(appearance)
         exports['fivem-appearance']:setPlayerAppearance(appearance)
 
         TriggerServerEvent('ox_appearance:save', appearance)
-    end
+    end ]]
 end)

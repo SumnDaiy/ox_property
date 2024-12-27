@@ -1,5 +1,3 @@
-local ox_appearance = exports.ox_appearance
-
 lib.callback.register('ox_property:wardrobe', function(source, action, data)
     local permitted, msg = IsPermitted(source, data.property, data.componentId, 'wardrobe')
 
@@ -9,8 +7,8 @@ lib.callback.register('ox_property:wardrobe', function(source, action, data)
 
     if action == 'get_outfits' then
         return {
-            personalOutfits = ox_appearance:outfitNames(Ox.GetPlayer(source).charId),
-            componentOutfits = ox_appearance:outfitNames(('%s:%s'):format(data.property, data.componentId))
+            --personalOutfits = ox_appearance:outfitNames(Ox.GetPlayer(source).charId),
+            --componentOutfits = ox_appearance:outfitNames(('%s:%s'):format(data.property, data.componentId))
         }
     elseif action == 'save_outfit' then
         ox_appearance:saveOutfit(('%s:%s'):format(data.property, data.componentId), data.appearance, data.slot, data.outfitNames)
