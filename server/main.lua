@@ -198,6 +198,16 @@ end)
 
 local invoiceThreshold = 1000
 
+local function processIdentifier(to)
+    if type(to.identifier) =="string" then
+        local account = Ox.GetGroupAccount(to.identifier)
+        return account
+    else
+        local account = Ox.GetCharacterAccount(to.identifier)
+        return account
+    end
+end
+
 ---@param source number
 ---@param msg string
 ---@param data { amount: number, from: OxPropertyTransactionParty, to: OxPropertyTransactionParty }
@@ -205,44 +215,34 @@ local invoiceThreshold = 1000
 function Transaction(source, msg, data)
     local available
     local amount, from, to in data
+    local toAccount = processIdentifier(to)
+
+    local player = Ox.GetPlayer(source)
+    local account = player.getAccount()
 
     if from then
-        local accounts = exports.pefcl:getAccountsByIdentifier(source, from.identifier).data
-        for i = 1, #accounts do
-            local account = accounts[i].dataValues
-            if account.isDefault then
-                available = account.balance
-            end
-        end
+        available = account.get("balance")
     end
 
     if not from or amount <= available then
         if from then
-            exports.pefcl:removeBankBalanceByIdentifier(source, {
-                identifier = from.identifier,
-                amount = amount,
-                message = msg
-            })
+            local result = account.removeBalance({amount = amount, message = msg, overdraw = false})
         end
 
         if to then
-            exports.pefcl:addBankBalanceByIdentifier(source, {
-                identifier = to.identifier,
-                amount = amount,
-                message = msg
-            })
+            toAccount.addBalance({amount = amount, message = msg})
         end
 
         return true
     elseif amount <= invoiceThreshold and from and to then
-        exports.pefcl:createInvoice(source, {
-            to = from.name,
-            toIdentifier = from.identifier,
-            from = to.name,
-            fromIdentifier = to.identifier,
+        local invoice = {
+            toAccount = account.accountId,
             amount = amount,
-            message = msg
-        })
+            message = msg,
+            dueDate = os.date("%Y-%m-%d %H:%M:%S", os.time() + 86400) -- 1 day
+        }
+
+        local result = toAccount.createInvoice(invoice)
 
         return true
     end
