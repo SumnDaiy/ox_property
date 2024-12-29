@@ -228,25 +228,55 @@ function Transaction(source, msg, data)
 
     if not from or amount <= available then
         if from then
-            local result = account.removeBalance({amount = amount, message = msg, overdraw = false})
+            local paid = lib.callback.await('ox_property:payDialog', player.source, amount, false)
+            if paid == 'cancel' then return false end
+            if paid == 'confirm' then
+                local result = account.removeBalance({amount = amount, message = msg, overdraw = false})
+                if result then
+                    local noti = {
+                        id = 'ox_property:parking:removeBalance',
+                        title = 'Payment',
+                        description = amount .. "$ was removed from your account"
+                    }
+                    lib.notify(player.source,noti)
+                end
+            end
         end
 
         if to then
             local result = toAccount.addBalance({amount = amount, message = msg})
+            if result then
+                --@TODO 
+                -- If property owner is online send a notification?
+                -- I don't feel like its needed but could do in some cases
+            end
         end
 
         return true
     elseif amount <= invoiceThreshold and from and to then
-        local invoice = {
-            toAccount = account.accountId,
-            amount = amount,
-            message = msg,
-            dueDate = os.date("%Y-%m-%d %H:%M:%S", os.time() + 86400) -- 1 day
-        }
+        local paid = lib.callback.await('ox_property:payDialog', player.source, amount, true)
+        if paid == 'cancel' then return false end
+        if paid == 'confirm' then
+            local invoice = {
+                toAccount = account.accountId,
+                amount = amount,
+                message = msg,
+                dueDate = os.date("%Y-%m-%d %H:%M:%S", os.time() + 86400) -- 1 day
+            }
 
-        local result = toAccount.createInvoice(invoice)
+            local result = toAccount.createInvoice(invoice)
 
-        return true
+            if result then
+                local noti = {
+                    id = 'ox_property:parking:createInvoice',
+                    title = 'Invoice received',
+                    description = 'An invoice of ' .. amount .. '$ received'
+                }
+                lib.notify(player.source, noti)
+            end
+
+            return true
+        end
     end
 
     return false, 'transaction_failed'

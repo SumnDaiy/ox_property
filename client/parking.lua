@@ -11,6 +11,26 @@ local vehicleNames = setmetatable({}, {
 	end
 })
 
+lib.callback.register('ox_property:payDialog',function(amount, invoice)
+    local content = locale('payDialog_removeBalance', amount)
+    if invoice then
+        content = locale('payDialog_createInvoice', amount)
+    end
+
+    local data = {
+        header = "Payment",
+        content = locale(content),
+        centered = true,
+        cancel = true,
+        labels = {
+            cancel = "Cancel Payment",
+            confirm = "Pay amount"
+        }
+    }
+    local dialog = lib.alertDialog(data)
+    return dialog
+end)
+
 ---@param data { component: OxPropertyComponent, vehicle: { id: integer, plate: string, owner: integer, group: string, stored: string, model: string, name: string, action: string, location: string, label: string } }
 local function manageVehicle(data)
     local options = {

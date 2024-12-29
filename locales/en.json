@@ -33,5 +33,7 @@
     "vehicle_stored": "Vehicle Stored",
     "action": "Action",
     "location": "Location",
-    "vehicles": "Vehicles"
+    "vehicles": "Vehicles",
+    "payDialog_createInvoice": "You'll receive an invoice of %s$ for your vehicle",
+    "payDialog_removeBalance": "Pay %s$ for your vehicle?"
 }
