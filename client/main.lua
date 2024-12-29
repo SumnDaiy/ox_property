@@ -1,3 +1,4 @@
+lib.locale()
 local player = Ox.GetPlayer()
 
 ---@type OxPropertyObject[]
@@ -310,7 +311,7 @@ local function isPermitted(property, componentId)
         end
     end
 
-    lib.notify({title = 'Permission Denied', type = 'error'})
+    lib.notify({title = locale('permission_denied'), type = 'error'})
     return false
 end
 exports('isPermitted', isPermitted)

@@ -74,7 +74,7 @@ RegisterComponentAction('management', function(component)
                 }
 
                 if level == 1 and scrollIndex ~= 3 then
-                    lib.notify({title = 'Action not possible for this permission level', type = 'error'})
+                    lib.notify({title = locale('invalid_permission_level'), type = 'error'})
                     lib.showMenu('component_menu')
                     return
                 elseif scrollIndex == 1 then

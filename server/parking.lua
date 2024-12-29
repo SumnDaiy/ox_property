@@ -195,7 +195,7 @@ local function moveVehicle(player, property, component, id)
     end
 
     if property.owner ~= player.charId then
-        local response, msg = Transaction(player.source, (recover and '%s Recovery' or '%s Move'):format(vehData.name), {
+        local response, msg = Transaction(player.source, (recover and '%s ' .. locale("recovery") or '%s ' .. locale("move")):format(vehData.name), {
             amount = recover and 1000 or 500,
             from = {name = player.name, identifier = player.charId},
             to = {name = property.groupName or property.ownerName, identifier = property.group or property.owner}

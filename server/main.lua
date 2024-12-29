@@ -1,3 +1,5 @@
+lib.locale()
+
 ---@type table<string, OxPropertyObject>
 Properties = {}
 
@@ -230,7 +232,7 @@ function Transaction(source, msg, data)
         end
 
         if to then
-            toAccount.addBalance({amount = amount, message = msg})
+            local result = toAccount.addBalance({amount = amount, message = msg})
         end
 
         return true

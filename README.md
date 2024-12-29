@@ -3,7 +3,7 @@
 - [X]  Parking
   - [X]  Retriving cars
   - [X]  Moving cars
-  - [X]  Account managment using ox_banking instead of PEFCL
+  - [X]  Account managment using ox_core nstead of PEFCL
   - [ ]  If there's anything I didn't do yet let me know
 - [X]  Managment
   - [ ]  If the property has doorlock permissions only update when creating a new permission level

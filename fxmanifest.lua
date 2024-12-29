@@ -44,7 +44,8 @@ ox_libs {
 }
 
 files {
-    '/data/**'
+    '/data/**',
+    'locales/*.json'
 }
 
 ox_property_data '/data/3671_whispymound_drive.lua'
