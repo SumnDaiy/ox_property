@@ -291,10 +291,12 @@ local function isPermitted(property, componentId)
 
     local variables = PropertyVariables[property]
 
+    -- Check if player is the owner if so, give full access
     if player.charId == variables.owner then
         return 1
     end
 
+    -- Check if player is maximum group grade (owner of group if so, give full access)
     local group = variables.group
     if group and player.getGroup(group) == #GlobalState[('group.%s'):format(group)].grades then
         return 1
@@ -303,11 +305,11 @@ local function isPermitted(property, componentId)
     if next(variables.permissions) then
         for i = 1, #variables.permissions do
             local level = variables.permissions[i]
+            if not next(level) then 
+                lib.notify({title = locale('permission_denied'), type = 'error'})
+                return false
+            end
             local access = i == 1 and 1 or level.components[componentId]
-
-            print(access)
-            print(json.encode(level, {indent=true}))
-            print(json.encode(variables, {indent=true}))
 
             if access and (level.everyone or (level.players and level.players[player.charId]) or group and player.getGroup(level.groups)) then
                 return access
