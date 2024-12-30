@@ -305,7 +305,7 @@ local function isPermitted(property, componentId)
     if next(variables.permissions) then
         for i = 1, #variables.permissions do
             local level = variables.permissions[i]
-            if not next(level) then 
+            if not next(level) then
                 lib.notify({title = locale('permission_denied'), type = 'error'})
                 return false
             end
