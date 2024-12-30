@@ -16,9 +16,10 @@ local vehicleData = setmetatable({}, {
 })
 
 ---@param player OxPlayer
----@return string[]
+---@return string[] | false
 local function getPlayerGroupsArray(player)
     local groupTable = player:getGroups()
+    if #groupTable == 0 then return false end
 
     local groups = {}
 
