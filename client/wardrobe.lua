@@ -168,7 +168,6 @@ AddEventHandler('ox_property:saveOutfit', function(data)
 end)
 
 RegisterNetEvent('ox_property:applyOutfit', function(appearance)
-    --print(json.encode(appearance, {indent=true}))
 --[[     if not appearance.model then appearance.model = 'mp_m_freemode_01' end
 
     if lib.progressCircle({
