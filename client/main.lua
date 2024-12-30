@@ -305,6 +305,10 @@ local function isPermitted(property, componentId)
             local level = variables.permissions[i]
             local access = i == 1 and 1 or level.components[componentId]
 
+            print(access)
+            print(json.encode(level, {indent=true}))
+            print(json.encode(variables, {indent=true}))
+
             if access and (level.everyone or (level.players and level.players[player.charId]) or group and player.getGroup(level.groups)) then
                 return access
             end

@@ -210,6 +210,12 @@ local function processIdentifier(to)
     end
 end
 
+---@param invoice boolean
+local function payDialog(amount, invoice)
+    local result = lib.callback.await('ox_property:payDialog', player.source, amount, true)
+    return result
+end
+
 ---@param source number
 ---@param msg string
 ---@param data { amount: number, from: OxPropertyTransactionParty, to: OxPropertyTransactionParty }
@@ -228,17 +234,15 @@ function Transaction(source, msg, data)
 
     if not from or amount <= available then
         if from then
-            local paid = lib.callback.await('ox_property:payDialog', player.source, amount, false)
-            if paid == 'cancel' then return false end
-            if paid == 'confirm' then
+            local result = payDialog(amount, false)
+            if result == 'cancel' then return false end
+            if result == 'confirm' then
                 local result = account.removeBalance({amount = amount, message = msg, overdraw = false})
                 if result then
-                    local noti = {
-                        id = 'ox_property:parking:removeBalance',
-                        title = 'Payment',
-                        description = amount .. "$ was removed from your account"
-                    }
-                    lib.notify(player.source,noti)
+                    lib.notify(player.source,{
+                        title = locale('pay_notification_title'),
+                        description = locale('pay_notification_description')
+                    })
                 end
             end
         end
@@ -254,9 +258,9 @@ function Transaction(source, msg, data)
 
         return true
     elseif amount <= invoiceThreshold and from and to then
-        local paid = lib.callback.await('ox_property:payDialog', player.source, amount, true)
-        if paid == 'cancel' then return false end
-        if paid == 'confirm' then
+        local result = payDialog(amount, true)
+        if result == 'cancel' then return false end
+        if result == 'confirm' then
             local invoice = {
                 toAccount = account.accountId,
                 amount = amount,
@@ -268,9 +272,8 @@ function Transaction(source, msg, data)
 
             if result then
                 local noti = {
-                    id = 'ox_property:parking:createInvoice',
-                    title = 'Invoice received',
-                    description = 'An invoice of ' .. amount .. '$ received'
+                    title = locale('invoice_notification_title'),
+                    description = locale('invoice_notification_description', amount)
                 }
                 lib.notify(player.source, noti)
             end

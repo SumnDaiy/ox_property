@@ -34,6 +34,13 @@
     "action": "Action",
     "location": "Location",
     "vehicles": "Vehicles",
-    "payDialog_createInvoice": "You'll receive an invoice of %s$ for your vehicle",
-    "payDialog_removeBalance": "Pay %s$ for your vehicle?"
+    "pay_dialog_header": "Payment",
+    "pay_dialog_cancel": "Cancel payment",
+    "pay_dialog_confirm": "Pay amount",
+    "pay_dialog_createInvoice": "You'll receive an invoice of %s$ for your vehicle",
+    "pay_dialog_removeBalance": "Pay %s$ for your vehicle?",
+    "pay_notification_title": "Payment",
+    "pay_notification_description": "%s$ was removed from your account",
+    "invoice_notification_title": "Invoice received",
+    "invoice_notification_description": "An invoice of %s$ received"
 }

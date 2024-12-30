@@ -11,20 +11,21 @@ local vehicleNames = setmetatable({}, {
 	end
 })
 
+
 lib.callback.register('ox_property:payDialog',function(amount, invoice)
-    local content = locale('payDialog_removeBalance', amount)
+    local content = locale('pay_dialog_removeBalance', amount)
     if invoice then
-        content = locale('payDialog_createInvoice', amount)
+        content = locale('pay_dialog_createInvoice', amount)
     end
 
     local data = {
-        header = "Payment",
+        header = locale('payment'),
         content = locale(content),
         centered = true,
         cancel = true,
         labels = {
-            cancel = "Cancel Payment",
-            confirm = "Pay amount"
+            cancel = locale('pay_dialog_cancel'),
+            confirm = locale('pay_dialog_confirm')
         }
     }
     local dialog = lib.alertDialog(data)
