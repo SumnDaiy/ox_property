@@ -1,6 +1,8 @@
 lib.callback.register('ox_property:wardrobe', function(source, action, data)
     local permitted, msg = IsPermitted(source, data.property, data.componentId, 'wardrobe')
 
+    lib.print.info(action, data)
+
     if not permitted or permitted > 1 then
         return false, msg or 'not_permitted'
     end

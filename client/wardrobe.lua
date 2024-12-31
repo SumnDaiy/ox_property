@@ -10,7 +10,7 @@ RegisterComponentAction('wardrobe', function(component)
     end
     if not data then return end
 
-    --local personalOutfits, componentOutfits in data
+    local personalOutfits, componentOutfits in data
 
     local personalOutfits = lib.callback.await("illenium-appearance:server:getOutfits")
 

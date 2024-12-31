@@ -22,7 +22,7 @@ exports('registerComponentAction', RegisterComponentAction)
 
 RegisterComponentAction('stash', function(component)
     return exports.ox_inventory:openInventory('stash', component.name)
-end, {'All access'})
+end, {locale('all_access')})
 
 local menus = {
     contextMenu = {
@@ -53,6 +53,7 @@ local function setBlipVariables(blip, property)
     local variables = PropertyVariables[property]
     SetBlipColour(blip, variables.colour)
     SetBlipShrink(blip, true)
+    SetBlipDisplay(blip, 2)
 
     if variables.owner ~= player.charId and not (variables.group and player.getGroups(variables.group)) then
         SetBlipAsShortRange(blip, true)
