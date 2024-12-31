@@ -6,10 +6,10 @@ local function getManagementData(property, player)
         groups = MySQL.query.await('SELECT name, ox_groups.label, GROUP_CONCAT(grade) AS grades FROM ox_groups LEFT JOIN ox_group_grades ON name = ox_group_grades.group GROUP BY ox_groups.name;'),
         doors = MySQL.query.await('SELECT id, name, data FROM ox_doorlock WHERE name LIKE ?', {('%s%%'):format(property)}),
         nearbyPlayers = {
-            {
+--[[             {
                 name = player.name,
                 charId = player.charId
-            }
+            } ]]
         }
     }
 
@@ -24,17 +24,18 @@ local function getManagementData(property, player)
 
     for i = 1, #data.doors do
         local door = data.doors[i]
-        door.data = json.decode(door.data)
     end
 
+
+    lib.print.info(data.nearbyPlayers)
     local playerPos = player.getCoords()
     local players = Ox.GetPlayers()
-    local len = #players
-    for i = 1, len do
+    for i = 1, #players do
         local nearbyPlayer = players[i]
         if nearbyPlayer.source ~= player.source and #(nearbyPlayer.getCoords() - playerPos) < 10 then
+            local playername = nearbyPlayer.get('firstName') .. ' ' .. nearbyPlayer.get('lastName')
             data.nearbyPlayers[#data.nearbyPlayers + 1] = {
-                name = nearbyPlayer.name,
+                name = playername,
                 charId = nearbyPlayer.charId
             }
         end

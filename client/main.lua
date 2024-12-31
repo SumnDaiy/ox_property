@@ -305,10 +305,7 @@ local function isPermitted(property, componentId)
     if next(variables.permissions) then
         for i = 1, #variables.permissions do
             local level = variables.permissions[i]
-            if not next(level) then
-                lib.notify({title = locale('permission_denied'), type = 'error'})
-                return false
-            end
+            
             local access = i == 1 and 1 or level.components[componentId]
 
             if access and (level.everyone or (level.players and level.players[player.charId]) or group and player.getGroup(level.groups)) then
