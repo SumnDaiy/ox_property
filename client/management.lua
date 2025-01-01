@@ -99,8 +99,6 @@ RegisterComponentAction('management', function(component)
                     for i = 1, #displayData.doors do
                         local door = displayData.doors[i]
 
-                        lib.print.info(door)
-
                         options[#options + 1] = {
                             label = door.name:gsub(property.name, ' '):gsub('_', ' '):gsub("(%l)(%w*)", function(first, rest) 
                                 return first:upper() .. rest
