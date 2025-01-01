@@ -10,11 +10,11 @@ RegisterComponentAction('wardrobe', function(component)
     end
     if not data then return end
 
-    local personalOutfits, componentOutfits in data
+    local _, componentOutfits in data
 
     local personalOutfits = lib.callback.await("illenium-appearance:server:getOutfits")
 
-    if component.outfits then
+    --[[ if component.outfits then
         options[#options + 1] = {
             title = 'Zone wardrobe',
             event = 'ox_property:outfits',
@@ -38,7 +38,7 @@ RegisterComponentAction('wardrobe', function(component)
                 outfitNames = componentOutfits or {}
             }
         }
-    end
+    end ]]
 
     options[#options + 1] = {
         title = 'Outfits',
@@ -89,7 +89,7 @@ RegisterNetEvent('ox_property:outfits', function(data)
     lib.showContext('zone_wardrobe')
 end)
 
-AddEventHandler('ox_property:setOutfit', function(data)
+--[[ AddEventHandler('ox_property:setOutfit', function(data)
     if not checkCurrentZone(data) then return end
 
     lib.registerContext({
@@ -134,9 +134,9 @@ AddEventHandler('ox_property:setOutfit', function(data)
     })
 
     lib.showContext('set_outfit')
-end)
+end) ]]
 
-local function getTableSize(t)
+--[[ local function getTableSize(t)
     local count = 0
     for _, __ in pairs(t) do
         count = count + 1
@@ -165,10 +165,10 @@ AddEventHandler('ox_property:saveOutfit', function(data)
 
         TriggerServerEvent('ox_property:saveOutfit', data, appearance)
     end
-end)
+end) ]]
 
-RegisterNetEvent('ox_property:applyOutfit', function(appearance)
---[[     if not appearance.model then appearance.model = 'mp_m_freemode_01' end
+--[[ RegisterNetEvent('ox_property:applyOutfit', function(appearance)
+    if not appearance.model then appearance.model = 'mp_m_freemode_01' end
 
     if lib.progressCircle({
         duration = 3000,
@@ -186,5 +186,5 @@ RegisterNetEvent('ox_property:applyOutfit', function(appearance)
         exports['fivem-appearance']:setPlayerAppearance(appearance)
 
         TriggerServerEvent('ox_appearance:save', appearance)
-    end ]]
-end)
+    end
+end) ]]

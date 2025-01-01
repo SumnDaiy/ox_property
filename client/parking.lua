@@ -19,7 +19,7 @@ lib.callback.register('ox_property:payDialog',function(amount, invoice)
     end
 
     local data = {
-        header = locale('payment'),
+        header = locale('pay_dialog_header'),
         content = locale(content),
         centered = true,
         cancel = true,

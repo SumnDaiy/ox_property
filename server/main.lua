@@ -211,8 +211,8 @@ local function processIdentifier(to)
 end
 
 ---@param invoice boolean
-local function payDialog(amount, invoice)
-    local result = lib.callback.await('ox_property:payDialog', player.source, amount, true)
+local function payDialog(source, amount, invoice)
+    local result = lib.callback.await('ox_property:payDialog', source, amount, invoice)
     return result
 end
 
@@ -234,7 +234,7 @@ function Transaction(source, msg, data)
 
     if not from or amount <= available then
         if from then
-            local result = payDialog(amount, false)
+            local result = payDialog(player.source, amount, false)
             if result == 'cancel' then return false end
             if result == 'confirm' then
                 local result = account.removeBalance({amount = amount, message = msg, overdraw = false})
@@ -258,7 +258,7 @@ function Transaction(source, msg, data)
 
         return true
     elseif amount <= invoiceThreshold and from and to then
-        local result = payDialog(amount, true)
+        local result = payDialog(player.source, amount, false)
         if result == 'cancel' then return false end
         if result == 'confirm' then
             local invoice = {

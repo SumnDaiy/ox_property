@@ -10,7 +10,8 @@ local function getManagementData(property, player)
                 name = player.name,
                 charId = player.charId
             } ]]
-        }
+        },
+        allPlayers = MySQL.query.await('SELECT `charId`,  CONCAT_WS(" ", `firstName`, `lastName`) as name FROM characters WHERE deleted IS NULL')
     }
 
     for i = 1, #data.groups do
@@ -26,8 +27,6 @@ local function getManagementData(property, player)
         local door = data.doors[i]
     end
 
-
-    lib.print.info(data.nearbyPlayers)
     local playerPos = player.getCoords()
     local players = Ox.GetPlayers()
     for i = 1, #players do

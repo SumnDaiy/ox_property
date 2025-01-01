@@ -67,6 +67,7 @@ RegisterComponentAction('management', function(component)
 
             local level = scrollIndex and selected - 2 or #variables.permissions + 1
             local permissionLevel = variables.permissions[level]
+
             local title = values[scrollIndex] or locale('new_level')
 
             if scrollIndex then
@@ -98,8 +99,12 @@ RegisterComponentAction('management', function(component)
                     for i = 1, #displayData.doors do
                         local door = displayData.doors[i]
 
+                        lib.print.info(door)
+
                         options[#options + 1] = {
-                            label = door.name:gsub(property.name, ''),
+                            label = door.name:gsub(property.name, ' '):gsub('_', ' '):gsub("(%l)(%w*)", function(first, rest) 
+                                return first:upper() .. rest
+                            end),
                             checked = permissionLevel.doors and permissionLevel.doors[door.id] or false,
                             close = false,
                             args = {
@@ -144,6 +149,22 @@ RegisterComponentAction('management', function(component)
                             }
                         }
                     end
+
+                    for i = 1, #displayData.allPlayers do
+                        local player = displayData.allPlayers[i]
+                        if permissionLevel.players and permissionLevel.players[player.charId] then
+                            options[#options+1] = {
+                                label = player.name,
+                                checked = true,
+                                close = false,
+                                args = {
+                                    section = 'players',
+                                    id = player.charId
+                                }
+                            }
+                        end
+                    end
+
                 elseif scrollIndex == 4 then
                     local delete = lib.alertDialog({
                         header = locale('confirm'),
