@@ -64,5 +64,6 @@
     "vehicle_recovered": "Vehicle Recovered",
     "vehicle_requirements_not_met": "Vehicle requirements not met",
     "vehicle_retrieved": "Vehicle Retrieved",
-    "vehicle_stored": "Vehicle Stored"
+    "vehicle_stored": "Vehicle Stored",
+    "property_managment_title": "Managing   \n %s"
 }

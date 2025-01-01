@@ -368,3 +368,222 @@ RegisterCommand('triggerComponent', function()
     end
 end)
 RegisterKeyMapping('triggerComponent', 'Trigger Component', 'keyboard', 'e')
+
+
+---local managmentData = lib.callback.await('ox_property:admin_management', 100, 'get_data', data)
+RegisterNetEvent('ox_property:context:handle_property_option', function (data)
+    local managmentData = lib.callback.await('ox_property:admin_management', 100, 'get_data', data)
+
+    local options = {}
+
+    if data.msg == 'set_owner' then
+       --[[  options = {{
+            title = 'Manual Select',
+            onSelect = function ()
+                local id
+                local success = false
+                local input = lib.inputDialog(locale('set_new_property_owner'), {
+                    {type = 'number', label = 'Enter ID', description = 'It can be either charId or serverId', icon = 'hashtag'},
+                    {type = 'checkbox', label = 'charId'},
+                    {type = 'checkbox', label = 'Remove Owner'},
+                    })
+            
+                if input[3] then
+                    id = 0
+                    success = true
+                else
+                    if input[1] == nil then
+                        lib.notify({
+                            title = 'Error',
+                            description = 'You need to provide id',
+                            type = 'error'
+                        })
+                    else
+                        if input[2] then
+                            id = input[1]
+                            success = true
+                        else
+                            local targetPlayer = lib.callback.await('ox_property:getoxplayer', source, input[1])
+                            if targetPlayer then
+                                id = targetPlayer.charId
+                                success = true
+                            else
+                                lib.notify({
+                                    title = 'Error',
+                                    description = 'No player with ID ' .. input[1] .. ' was found',
+                                    type = 'error'
+                                })
+                            end
+                        end
+                    end
+                end
+            
+                if success then
+                    local data = {
+                        property = data.property,
+                        owner = id
+                    }
+    
+                    local result = lib.callback.await('ox_property:admin_management', 100, 'set_value', data)
+                    if result then
+                        lib.notify({
+                            title = 'Success',
+                            description = 'Action successful',
+                            type = 'success'
+                        })
+                    end
+                end
+            end
+        }} ]]
+        for key, value in pairs(managmentData) do
+            for component, component_value in pairs(value) do
+                if key == "allPlayers" then
+                    options[#options+1] = {
+                        title = component_value.name,
+                        onSelect = function ()
+                            local args = {
+                                property = data.property,
+                                owner = component_value.charId
+                            }
+                            local result = lib.callback.await('ox_property:admin_management', 100, 'set_value', args)
+                            if result then
+                                lib.notify({
+                                    title = 'Success',
+                                    description = 'Action successful',
+                                    type = 'success'
+                                })
+                            end
+                        end
+                    }
+                end
+            end
+        end
+    elseif data.msg == 'set_group' then
+        for key, value in pairs(managmentData) do
+            for component, component_value in pairs(value) do
+                if key == "groups" then
+                    options = {
+                        {
+                            title = locale('none'),
+                            onSelect = function ()
+                                local args = {
+                                    property = data.property,
+                                    group = 0
+                                }
+                                local result = lib.callback.await('ox_property:admin_management', 100, 'set_value', args)
+                                if result then
+                                    lib.notify({
+                                        title = 'Success',
+                                        description = 'Action successful',
+                                        type = 'success'
+                                    })
+                                end
+                            end
+                        }
+                    }
+
+                    options[#options+1] = {
+                        title = component_value.label .. " | " .. component_value.name,
+                        onSelect = function ()
+                            local args = {
+                                property = data.property,
+                                group = component_value.name
+                            }
+                            local result = lib.callback.await('ox_property:admin_management', 100, 'set_value', args)
+                            if result then
+                                lib.notify({
+                                    title = 'Success',
+                                    description = 'Action successful',
+                                    type = 'success'
+                                })
+                            end
+                        end
+                    }
+                end
+            end
+        end
+    end
+
+    lib.registerContext({
+        id = 'ox_property:propertymenu_setproperty',
+        title = "Set New Owner",
+        menu = 'ox_property:propertymenu',
+        options = options
+    })
+    
+    lib.showContext('ox_property:propertymenu_setproperty')
+end)
+
+RegisterNetEvent('ox_property:context:manage_property', function(args)
+    lib.registerContext({
+      id = 'ox_property:propertymenu',
+      title = locale('property_managment_title', args.propertyLabel),
+      menu = 'context_property',
+      options = {
+        {
+            title = 'Set New Owner',
+            event = 'ox_property:context:handle_property_option',
+            args = {
+                property = args.property,
+                msg = 'set_owner'
+            }
+        },
+        {
+            title = 'Set New Group',
+            event = 'ox_property:context:handle_property_option',
+            args = {
+                property = args.property,
+                msg = 'set_group'
+            }
+        }
+      }
+    })
+
+    lib.showContext('ox_property:propertymenu')
+  end)
+
+RegisterNetEvent('ox_property:propertymanagment', function(data)
+    local options = {}
+    for property, object in pairs(Properties) do
+        local information = {}
+        for propertyId, variables in pairs(PropertyVariables) do
+            if propertyId == property then
+                for key, value in pairs(variables) do
+                    if key == "ownerName" or key == "owner" or key == "group" or key == "groupName" then
+                        information[#information+1] = {
+                            label = key,
+                            value = value
+                        }
+                    end
+                end
+
+                if #information == 0 then
+                    information = {locale('none')}
+                end
+
+                options[#options+1] = {
+                    title = object.label,
+                    metadata = information,
+                    event = 'ox_property:context:manage_property',
+                    args = {
+                        property = property,
+                        components = object.components,
+                        propertyLabel = object.label,
+                    },
+                }
+            end
+        end
+    end
+
+
+    local context = {
+        id = 'context_property',
+        title = locale('property_managment_admin_title'),
+        canClose = true,
+        options = options
+    }
+
+    lib.registerContext(context)
+
+    lib.showContext('context_property')
+end)

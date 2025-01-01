@@ -285,3 +285,10 @@ function Transaction(source, msg, data)
     return false, 'transaction_failed'
 end
 exports('transaction', Transaction)
+
+lib.addCommand("propertymanagment", {
+	help = 'Open the property managment menu',
+	restricted = "group.admin"
+}, function(source)
+	TriggerClientEvent("ox_property:propertymanagment", source)
+end)

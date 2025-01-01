@@ -1,16 +1,22 @@
 # WIP
 
 - [X]  Parking
+
   - [X]  Retriving cars
   - [X]  Moving cars
   - [X]  Account managment using ox_core nstead of PEFCL
   - [X]  Added a new "feature" that asks the player if he wants to pay for moving / retreiving cars
   - [X]  Added locales
 - [X]  Managment
+
   - [ ]  Update doorlock permissions on resource start aswell?
   - [X]  Manage offline players who had permissions on the property
   - [X]  Added locales
 - [X]  Wardrobe
+  As of know you have to modify illenium-appearance/client/main.lua and add the following:
+ `RegisterNetEvent("illenium-appearance:client:openSpecificClothingShopMenu", function(data)
+    OpenMenu(data.isPedMenu, data.menuType, data.menuData)
+  end)`
   - [X]  I replaced ox_appearance with illenium appearance,
   - [X]  It still has a lot of commented code due to Property Outfits not being a thing
 

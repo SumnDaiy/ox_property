@@ -239,3 +239,42 @@ lib.callback.register('ox_property:management', function(source, action, data)
 
     return false, 'invalid_action'
 end)
+
+---@param source integer
+---@param action string
+---@param data { property: string, componentId: integer, level?: integer, permissions?: table, owner?: integer, group?: string }
+---@return boolean | OxPropertyManagementData response, string | nil msg
+lib.callback.register('ox_property:admin_management', function(source, action, data)
+    lib.print.info("Source:", source)
+    lib.print.info("Action:", action)
+    lib.print.info("Data:", data)
+
+--[[     local permitted, msg = IsPermitted(source, data.property, data.componentId, 'management')
+
+    if not permitted or permitted > 1 then
+        return false, msg or 'not_permitted'
+    end ]]
+
+    if action == 'get_data' then
+        return getManagementData(data.property, Ox.GetPlayer(source) --[[@as OxPlayer]])
+    end
+
+    local property = Properties[data.property]
+    if action == 'update_permission' then
+        return updatePermissionLevel(property, data)
+    elseif action == 'delete_permission' then
+        return deletePermissionLevel(property, data.level)
+    elseif action == 'set_value' then
+        return setPropertyValue(property, data)
+    end
+
+    return false, 'invalid_action'
+end)
+
+lib.callback.register('ox_property:getoxplayer', function (source, playerId)
+    local OxPlayer = Ox.GetPlayer(playerId)
+    if OxPlayer.charId then
+        return OxPlayer
+    end
+    return false
+end)
